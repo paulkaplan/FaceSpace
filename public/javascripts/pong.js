@@ -18,11 +18,11 @@ $(document).ready(function(){
   now.receiveMessage = function(message){
     if(message.id != selfID){
       mesh.velocity.z = message.vZ; 
-      mesh.velocity.y = message.vY;
-      mesh.velocity.x = message.vX;
-      mesh.position.x = message.bX;
-      mesh.position.y = message.bY;
-      mesh.position.z = message.bZ;
+      mesh.velocity.y = 0 //message.vY;
+      mesh.velocity.x = 0 //message.vX;
+      mesh.position.x = 0 //message.bX;
+      mesh.position.y = 0 //message.bY;
+      mesh.position.z = 0 //message.bZ;
     } else { console.log(message) }
   }
 });
@@ -128,12 +128,12 @@ function updateBallVelocity(){
         mesh.velocity.y *= -1*Math.random();
         now.distributeMessage({
           id : selfID,
-          vZ : mesh.velocity.z, 
-          vY : mesh.velocity.y,
-          vX : mesh.velocity.x,
-          bX : mesh.position.x,
-          bY : mesh.position.y,
-          bZ : mesh.position.z
+          vZ : -mesh.velocity.z, 
+          // vY : mesh.velocity.y,
+          // vX : mesh.velocity.x,
+          // bX : mesh.position.x,
+          // bY : mesh.position.y,
+          // bZ : mesh.position.z
         })
   }
 }
