@@ -106,20 +106,14 @@ function animate() {
 }
 
 function updateBallVelocity(){
-  if( mesh.velocity.z > 0 ){
-    if( mesh.position.z < camera.position.z-200){
-      // mesh.position.z += 100;
-    } else {
-      if(inZone){
+  if( mesh.velocity.z > 0
+    && mesh.position.z >= camera.position.z-200
+    && inZone ){
         mesh.velocity.z *= -1;
         mesh.velocity.x *= -1*Math.random();
         mesh.velocity.y *= -1*Math.random();
-      }
-    }
   } else {
-    if( mesh.position.z > 0 ){
-      // mesh.position.z -= 100;
-    } else {
+    if( mesh.position.z < 0 ) {
       mesh.velocity.z *= -1;
       mesh.velocity.x *= -1*Math.random();
       mesh.velocity.y *= -1*Math.random();
