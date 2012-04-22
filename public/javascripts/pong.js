@@ -18,11 +18,11 @@ $(document).ready(function(){
   now.receiveMessage = function(message){
     if(message.id != selfID){
       mesh.velocity.z = message.vZ; 
-      mesh.velocity.y = 0 //message.vY;
-      mesh.velocity.x = 0 //message.vX;
-      mesh.position.x = 0 //message.bX;
-      mesh.position.y = 0 //message.bY;
-      mesh.position.z = 0 //message.bZ;
+      mesh.velocity.y = message.vY;
+      mesh.velocity.x = message.vX;
+      mesh.position.x = message.bX;
+      mesh.position.y = message.bY;
+      mesh.position.z = 0;
     } else { console.log(message) }
   }
 });
@@ -61,7 +61,7 @@ function execute(comp) {
       bz = mesh.position.z;
       
       // console.log(bx,by)
-  ctx.fillStyle = 'rgba(0,0,0,0.25)';
+  ctx.fillStyle = 'rgba(0,0,0,0.1)';
   ctx.fillRect(comp.x, comp.y, comp.width, comp.height);
   
   var xoff = 2 * ((comp.x + comp.width / 2) - (canvas.width / 2)) / canvas.width;
@@ -80,8 +80,8 @@ function execute(comp) {
   
   threeCtx.fillStyle = 'rgb(0,0,0)'
   threeCtx.fillRect(0, 0, threeCanvas.width, threeCanvas.height);
-  threeCtx.fillStyle = 'rgba(255,255,255,0.5)'
-  threeCtx.fillRect(nx, ny, paddleWidth, paddleWidth);
+  threeCtx.strokeStyle = 'rgb(255,0,0)'
+  threeCtx.strokeRect(nx, ny, paddleWidth, paddleWidth);
 }
 
 
@@ -129,11 +129,11 @@ function updateBallVelocity(){
         now.distributeMessage({
           id : selfID,
           vZ : -mesh.velocity.z, 
-          // vY : mesh.velocity.y,
-          // vX : mesh.velocity.x,
-          // bX : mesh.position.x,
-          // bY : mesh.position.y,
-          // bZ : mesh.position.z
+          vY : mesh.velocity.y,
+          vX : mesh.velocity.x,
+          bX : mesh.position.x,
+          bY : mesh.position.y,
+          bZ : mesh.position.z
         })
   }
 }
