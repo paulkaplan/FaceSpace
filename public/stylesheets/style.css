@@ -2,9 +2,20 @@ html, body {
   background-color: black;
 }
 
+h2 {
+  text-align: right;
+  font-size: 2em;
+  line-height: 1em;
+  color: red;
+  z-index: 1000;
+  font-family: 'VT323', Monaco, monospace, courier;
+  
+}
+
 video { display: none; }
 
 canvas {
+  z-index: -1000;
   display: block;
   margin: 10px 0 -122px 0;
 }
