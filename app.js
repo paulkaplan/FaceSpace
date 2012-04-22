@@ -1,3 +1,10 @@
+var Pusher = require('node-pusher');
+var pusher = new Pusher({
+  appId: '19117',
+  key: 'fbe539c0f8d3422f66ee',
+  secret: 'f01f80437ce29c37898d'
+});
+
 var express = require('express');
 var routes  = require('./routes');
 
