@@ -1,7 +1,10 @@
+html, body {
+  background-color: black;
+}
+
 video { display: none; }
 
 canvas {
   display: block;
   margin: 10px 0 -122px 0;
-  border: 1px solid #ccc;
 }
