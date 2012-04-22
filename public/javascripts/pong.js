@@ -1,0 +1,137 @@
+var video  = document.getElementById("input");
+var canvas = document.getElementById("output");
+var ctx    = canvas.getContext("2d");
+var radius = 20;
+var direction = 0;
+var inZone = false;
+var timeStep = 1;
+var shadow = {
+  x: 0,
+  y: 0,
+  blur: 5,
+  spread: 10,
+  color: '#000'
+}
+
+
+navigator.webkitGetUserMedia("video",
+  function(stream) {
+    video.src = window.webkitURL.createObjectURL(stream)
+    animate();
+  }, function(err) { alert("Looks like your browser doesn't support using the webcam. Oh well..."); }
+);
+
+
+function draw() {
+  // ctx.drawImage(video, 0, 0, video.width, video.height, 0, 0, canvas.width, canvas.height);
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+  
+  var comp = ccv.detect_objects({
+    "canvas": canvas,
+    "cascade": cascade, // Defined in CCV as part of face-detection
+    "interval": 5,
+    "min_neighbors": 1
+  });
+
+  if (comp.length > 0 && comp[0].confidence > 0) { execute(comp[0]); }
+}
+
+
+function boxShadow() {
+  return shadow.x.toString() + 'px ' + shadow.y.toString() + 'px ' + shadow.blur.toString() + 'px ' + shadow.spread.toString() + 'px ' + shadow.color;
+}
+
+
+function execute(comp) {
+  var bx = mesh.position.x,
+      by = mesh.position.y,
+      bz = mesh.position.z;
+      // console.log(mesh)
+  ctx.fillStyle = 'rgba(0,0,0,0.25)';
+  ctx.fillRect(comp.x, comp.y, comp.width, comp.height);
+  
+  // var xoff = 2 * ((comp.x + comp.width / 2) - (canvas.width / 2)) / canvas.width;
+  // var yoff = -2 * ((comp.y + comp.height / 2) - (canvas.height / 2)) / canvas.height;
+  var xl = 2 * (comp.x - (canvas.width / 2)) / canvas.width;
+  var xr = 2 * ((comp.x + comp.width) - (canvas.width / 2)) / canvas.width;
+  var yb = 2 * (comp.y - (canvas.height / 2)) / canvas.height;
+  var yt = 2 * ((comp.y + comp.height) - (canvas.height /2)) / canvas.height;
+  
+  xl *= window.innerWidth - 20;
+  xr *= window.innerWidth - 20;
+  yb *= window.innerHeight - 20;
+  yt *= window.innerHeight - 20;
+
+  if( bx > xl && bx < xr
+    && by > yb && by < yt ){
+    inZone = true;
+  } else { inZone = false; }
+  // var zoom = (canvas.width * canvas.height / 2) / (comp.width * comp.height);
+  // 
+  // mesh.rotation.y   = xoff;
+  // mesh.rotation.x   = yoff;
+  // camera.position.z = zoom * 100;
+}
+
+
+video.addEventListener('play', function() { setInterval(draw, 1); });
+
+
+var camera, scene, renderer, geometry, material, mesh;
+init();
+
+function init() {
+  scene  = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
+  camera.position.z = 1000;
+  scene.add(camera);
+
+  geometry = new THREE.SphereGeometry(radius, 20, 20);
+  material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+  mesh     = new THREE.Mesh(geometry, material);
+  scene.add(mesh);
+  mesh.velocity = new THREE.Vertex();
+  mesh.velocity.z = 50
+  mesh.velocity.y = 5
+  mesh.velocity.x = 1
+  
+  renderer = new THREE.CanvasRenderer();
+  renderer.setSize(window.innerWidth - 20, window.innerHeight - 20);
+  document.body.appendChild(renderer.domElement);
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+  render();
+}
+
+function updateBallVelocity(){
+  if( mesh.velocity.z > 0 ){
+    if( mesh.position.z < camera.position.z-200){
+      // mesh.position.z += 100;
+    } else {
+      if(inZone){
+        mesh.velocity.z *= -1;
+        mesh.velocity.x *= -1*Math.random();
+        mesh.velocity.y *= -1*Math.random();
+      }
+    }
+  } else {
+    if( mesh.position.z > 0 ){
+      // mesh.position.z -= 100;
+    } else {
+      mesh.velocity.z *= -1;
+      mesh.velocity.x *= -1*Math.random();
+      mesh.velocity.y *= -1*Math.random();
+    }
+  }
+}
+
+function render() {
+  updateBallVelocity()
+  mesh.position.z += mesh.velocity.z*timeStep;
+  mesh.position.x += mesh.velocity.x*timeStep;
+  mesh.position.y += mesh.velocity.y*timeStep;
+  
+  renderer.render( scene, camera );
+}
