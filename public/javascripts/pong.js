@@ -1,3 +1,4 @@
+var selfID = Math.random()*1000000;
 var video  = document.getElementById("input");
 var canvas = document.getElementById("output");
 var threeCanvas, threeCtx;
@@ -15,7 +16,14 @@ var shadow = {
 }
 $(document).ready(function(){
   now.receiveMessage = function(message){
-    console.log(message);
+    if(message.id != selfID){
+      mesh.velocity.z = message.vZ; 
+      mesh.velocity.y = message.vY;
+      mesh.velocity.x = message.vX;
+      mesh.position.x = message.bX;
+      mesh.position.y = message.bY;
+      mesh.position.z = message.bZ;
+    } else { console.log(message) }
   }
 });
 
@@ -118,12 +126,15 @@ function updateBallVelocity(){
         mesh.velocity.z *= -1;
         mesh.velocity.x *= -1*Math.random();
         mesh.velocity.y *= -1*Math.random();
-  } else {
-    if( mesh.position.z < 0 ) {
-      mesh.velocity.z *= -1;
-      mesh.velocity.x *= -1*Math.random();
-      mesh.velocity.y *= -1*Math.random();
-    }
+        now.distributeMessage({
+          id : selfID,
+          vZ : mesh.velocity.z, 
+          vY : mesh.velocity.y,
+          vX : mesh.velocity.x,
+          bX : mesh.position.x,
+          bY : mesh.position.y,
+          bZ : mesh.position.z
+        })
   }
 }
 
