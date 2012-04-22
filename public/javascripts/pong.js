@@ -1,10 +1,11 @@
 var video  = document.getElementById("input");
 var canvas = document.getElementById("output");
+var threeCanvas, threeCtx;
 var ctx    = canvas.getContext("2d");
 var radius = 20;
 var direction = 0;
 var inZone = false;
-var timeStep = 1;
+var timeStep = 0.7;
 var shadow = {
   x: 0,
   y: 0,
@@ -12,7 +13,11 @@ var shadow = {
   spread: 10,
   color: '#000'
 }
-
+$(document).ready(function(){
+  now.receiveMessage = function(message){
+    console.log(message);
+  }
+});
 
 navigator.webkitGetUserMedia("video",
   function(stream) {
@@ -43,34 +48,32 @@ function boxShadow() {
 
 
 function execute(comp) {
-  var bx = mesh.position.x,
-      by = mesh.position.y,
+  var bx = mesh.position.x + threeCanvas.width/2,
+      by = threeCanvas.height/2 - mesh.position.y,
       bz = mesh.position.z;
-      // console.log(mesh)
+      
+      // console.log(bx,by)
   ctx.fillStyle = 'rgba(0,0,0,0.25)';
   ctx.fillRect(comp.x, comp.y, comp.width, comp.height);
   
-  // var xoff = 2 * ((comp.x + comp.width / 2) - (canvas.width / 2)) / canvas.width;
-  // var yoff = -2 * ((comp.y + comp.height / 2) - (canvas.height / 2)) / canvas.height;
-  var xl = 2 * (comp.x - (canvas.width / 2)) / canvas.width;
-  var xr = 2 * ((comp.x + comp.width) - (canvas.width / 2)) / canvas.width;
-  var yb = 2 * (comp.y - (canvas.height / 2)) / canvas.height;
-  var yt = 2 * ((comp.y + comp.height) - (canvas.height /2)) / canvas.height;
-  
-  xl *= window.innerWidth - 20;
-  xr *= window.innerWidth - 20;
-  yb *= window.innerHeight - 20;
-  yt *= window.innerHeight - 20;
+  var xoff = 2 * ((comp.x + comp.width / 2) - (canvas.width / 2)) / canvas.width;
+  var yoff = -2 * ((comp.y + comp.height / 2) - (canvas.height / 2)) / canvas.height;
 
-  if( bx > xl && bx < xr
-    && by > yb && by < yt ){
-    inZone = true;
-  } else { inZone = false; }
-  // var zoom = (canvas.width * canvas.height / 2) / (comp.width * comp.height);
-  // 
-  // mesh.rotation.y   = xoff;
-  // mesh.rotation.x   = yoff;
-  // camera.position.z = zoom * 100;
+  var paddleScale = threeCanvas.width / canvas.width;
+  var paddleWidth = comp.width * paddleScale;
+  var nx = -xoff * 1.42 * threeCanvas.width / 2 + threeCanvas.width / 4;
+  var ny = -yoff * 1.42 * threeCanvas.height / 2 + threeCanvas.height / 4;
+
+  inZone = false
+  if( bx > nx && bx < nx+paddleWidth
+    && by > ny && by < ny+paddleWidth){
+        inZone = true;
+  }
+  
+  threeCtx.fillStyle = 'rgb(0,0,0)'
+  threeCtx.fillRect(0, 0, threeCanvas.width, threeCanvas.height);
+  threeCtx.fillStyle = 'rgba(255,255,255,0.5)'
+  threeCtx.fillRect(nx, ny, paddleWidth, paddleWidth);
 }
 
 
@@ -98,6 +101,9 @@ function init() {
   renderer = new THREE.CanvasRenderer();
   renderer.setSize(window.innerWidth - 20, window.innerHeight - 20);
   document.body.appendChild(renderer.domElement);
+  threeCanvas = renderer.domElement;
+  threeCtx    = threeCanvas.getContext("2d");
+  
 }
 
 function animate() {
@@ -107,7 +113,7 @@ function animate() {
 
 function updateBallVelocity(){
   if( mesh.velocity.z > 0
-    && mesh.position.z >= camera.position.z-200
+    && mesh.position.z >= camera.position.z-201
     && inZone ){
         mesh.velocity.z *= -1;
         mesh.velocity.x *= -1*Math.random();
