@@ -36,7 +36,7 @@ function boxShadow() {
 
 
 function isNear(x, y) {
-  if (Math.abs(x-y) < 100.0) { return true; }
+  if (Math.abs(x-y) < 10.0) { return true; }
   return false;
 }
 
