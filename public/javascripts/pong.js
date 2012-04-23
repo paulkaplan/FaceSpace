@@ -102,9 +102,9 @@ function init() {
   mesh     = new THREE.Mesh(geometry, material);
   scene.add(mesh);
   mesh.velocity = new THREE.Vertex();
-  mesh.velocity.z = 50
-  mesh.velocity.y = 5
-  mesh.velocity.x = 1
+  mesh.velocity.z = 60
+  mesh.velocity.y = 0
+  mesh.velocity.x = 0
   
   renderer = new THREE.CanvasRenderer();
   renderer.setSize(window.innerWidth - 20, window.innerHeight - 20);
@@ -124,8 +124,8 @@ function updateBallVelocity(){
     && mesh.position.z >= camera.position.z-201
     && inZone ){
         mesh.velocity.z *= -1;
-        mesh.velocity.x *= -1*Math.random();
-        mesh.velocity.y *= -1*Math.random();
+        mesh.velocity.x *= -1*Math.random()*3;
+        mesh.velocity.y *= -1*Math.random()*3;
         now.distributeMessage({
           id : selfID,
           vZ : -mesh.velocity.z, 
