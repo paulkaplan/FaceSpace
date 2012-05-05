@@ -24,6 +24,7 @@ app.configure('production', function(){
 // Routes
 app.get('/', routes.index);
 app.get('/pong', routes.pong);
+app.get('/map', routes.map);
 
 app.listen(3000);
 var everyone = require("now").initialize(app);
