@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Facespace by paulkaplan</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Facespace</h1>
+        <p>Eigenfaces span face space. Face based games and input devices</p>
+        <p class="view"><a href="https://github.com/paulkaplan/FaceSpace">View the Project on GitHub <small>paulkaplan/FaceSpace</small></a></p>
+        <ul>
+          <li><a href="https://github.com/paulkaplan/FaceSpace/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/paulkaplan/FaceSpace/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/paulkaplan/FaceSpace">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>FaceSpace</h1>
+
+<p>This is the place for all my face based input device projects. Currently there are two major sides:</p>
+
+<ul>
+<li>Node: this has all the WebRTC stuff for getting webcam in browser as well as doing face detection in browser. The server is node for various reasons (below). <a href="https://vimeo.com/41747939">Video of google streetview controls</a>
+</li>
+<li>Processing: using websockets to allow the face tracking to be done in Processing, then piped to the browser. <a href="https://vimeo.com/41747940">Video of three.js Minecraft controls</a>
+</li>
+</ul><h2>Building the node app</h2>
+
+<p>Requires node, npm and Chrome. Only tested on a Mac, should work on any computer with a webcam.</p>
+
+<pre><code>git clone git@github.com:paulkaplan/FaceSpace.git
+cd Faceit
+npm install
+node app.js
+</code></pre>
+
+<p>In Chrome, go to chrome://flags, enable MediaStream flag.</p>
+
+<h3>Structure:</h3>
+
+<pre lang="localhost:3000"><code>|- / -&gt; Theremin
+|- /map -&gt; Google street view with face controls
+|- /pong -&gt; Multiplayer face pong
+</code></pre>
+
+<h3>Troubleshooting / Warning</h3>
+
+<p>If you get some permissions errors, try starting Chrome from the terminal with this command:
+```/path/to/chrome/app --allow-file-access-from-file</p>
+
+<pre><code>
+On a Mac, that path is annoyingly long, for reference on my computer it looks like:
+```/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --allow-file-access-from-file
+</code></pre>
+
+<p>Also note: you might want to turn down your speakers, the theremin can catch you by surprise.</p>
+
+<h3>Status</h3>
+
+<p>Face pong and theremin where created during the <a href="http://hack.uchicago.edu/">hack@uchicago</a> hackathon, april 2012. Map was created shortly thereafter.</p>
+
+<h4>Pong</h4>
+
+<p>Uses <a href="http://nowjs.com/">now.js</a> for multiplayer action, currently won't really work without two different people logged in. Even then it's pretty broken. Will get back to working on this soon with deterministic physics approach for auto tweening the ball from paddle to paddle, instead of the velocity based approach.</p>
+
+<h4>Theremin</h4>
+
+<p>I want to make a blues scale jazz one. Or one where your up and down head motion is the drum beat and side to side is chord progression.</p>
+
+<h4>Map</h4>
+
+<p>Lots to do here, mostly google street view isn't quite fast enough to keep up. Waiting for them to open up MapGL API. But working on a way to advance down the street in the direction you are facing, have a prototype which is alright I'll put up soon. It is like a real life racing game, pretty sweet actually.</p>
+
+<h3>Future</h3>
+
+<p>Looking into replacing pure javascript vision library with either Native Client (C/C++) or websocket-ing in the data from a server running client side (partially done, b elow)</p>
+
+<h1>Building the Processing side</h1>
+
+<p>This is arguably much easier:
+1. grab the <a href="http://ubaa.net/shared/processing/opencv/">openCV Processing library</a> 
+2. and the <a href="http://p5.twelvebytes.net/websocketP5-0.1.3/">websockets library</a>
+3. run the sketch, it will start a server which hosts the websocket connection, index.html should be available at localhost:8080.</p>
+
+<h2>Questions/comments</h2>
+
+<p>Feel free to contact <a href="https://www.facebook.com/paulkaplan74" title="Paul's Facebook">Paul</a> if any of this looks interesting to you or you want to get involved. There will be much more to come.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/paulkaplan">paulkaplan</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
